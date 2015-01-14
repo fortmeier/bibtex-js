@@ -379,6 +379,12 @@
             return value;
         },
 
+        parseAuthors: function(value) {
+            value = value.replace(/, (.)[^ <>]*/g, ", $1. ");
+            value = value.replace(/ and /g, ", ");
+            return value;
+        },
+
         DisplayBibtex: function (input, output) {
             // parse bibtex input
             this.input = input;
@@ -393,6 +399,7 @@
             var entriesArray = new Array();
             for (var entryKey in entriesObj) {
                 entriesObj[entryKey]["KEY"] = entryKey;
+                entriesObj[entryKey]["AUTHOR"] = this.parseAuthors( entriesObj[entryKey]["AUTHOR"] );
                 entriesArray.push( entriesObj[entryKey] );
             }
 
