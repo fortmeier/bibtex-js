@@ -1,4 +1,3 @@
-
 //
 // Author: Rahul Potharaju
 // Website: http://rahul-potharaju.com
@@ -199,6 +198,13 @@
             }
         },
 
+        toFirstEntry: function () {
+            while (this.input[this.pos] != "@" ) {
+                this.pos++;
+            }
+        },
+
+
         value_braces: function () {
             var bracecount = 0;
             this.match("{");
@@ -334,6 +340,7 @@
         },
 
         bibtex: function () {
+            this.toFirstEntry();
             while (this.tryMatch("@")) {
                 var d = this.directive().toUpperCase();
                 this.match("{");
