@@ -339,6 +339,10 @@
             this.entry_body();
         },
 
+        sorting: function(a,b) {
+            return parseInt(b["YEAR"]) - parseInt(a["YEAR"]);
+        },
+
         bibtex: function () {
             this.toFirstEntry();
             while (this.tryMatch("@")) {
@@ -352,6 +356,7 @@
                     this.comment();
                 } else {
                     this.entry();
+                    this.entries[this.currentEntry]["ENTRYTYPE"] = d.slice(1);
                 }
                 this.match("}");
             }
@@ -383,14 +388,22 @@
             var old = output.find("*");
 
             // iterate over bibTeX entries
-            var entries = this.getEntries();
+            var entriesObj = this.getEntries();
 
-            for (var entryKey in entries) {
+            var entriesArray = new Array();
+            for (var entryKey in entriesObj) {
+                entriesObj[entryKey]["KEY"] = entryKey;
+                entriesArray.push( entriesObj[entryKey] );
+            }
 
-                var entry = entries[entryKey];
+            entriesArray.sort( this.sorting );
+
+            for (var i = 0; i < entriesArray.length; i++) {
+                entry = entriesArray[i];
 
                 // find template
-                var tpl = $("." + this.template).clone().removeClass(this.template);
+                var tplclass = entry["ENTRYTYPE"];
+                var tpl = $("." + tplclass).clone().removeClass(tplclass);
                 
                 // find all keys in the entry
                 var keys = [];
